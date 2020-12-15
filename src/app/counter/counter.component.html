@@ -1,0 +1,18 @@
+<div class="container mt-5">
+  <div class="card mx-auto">
+    <div class="card-header title text-center">
+      {{title}}
+    </div>
+    <div class="card-body mx-auto">
+      <h5 class="card-title text-center" #timer></h5>
+      <div class="d-flex">
+        <button type="button" class="btn btn-success m-2" (click)="startTimer()" *ngIf="!timerIsStart else stop">Start</button>
+        <button type="button" class="btn btn-warning m-2" (click)="pauseTimer()" #pause>Wait</button>
+        <button type="button" class="btn btn-dark m-2" (click)="resetTimer()">Reset</button>
+      </div>
+      <ng-template #stop>
+        <button type="button" class="btn btn-danger m-2" (click)="stopTimer()">Stop</button>
+    </ng-template>
+    </div>
+  </div>
+</div>
