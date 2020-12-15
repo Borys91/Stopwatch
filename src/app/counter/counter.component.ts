@@ -10,10 +10,8 @@ import * as moment from 'moment';
   styleUrls: ['./counter.component.scss']
 })
 export class CounterComponent implements OnInit {
-  @ViewChild('timer', { read: ElementRef, static: true })
-  timer: ElementRef;
-  @ViewChild('pause', { read: ElementRef, static: true })
-  pause: ElementRef;
+  @ViewChild('pause', { read: ElementRef, static: true }) pause: ElementRef;
+  timer;
   title = 'stopwatch';
   timerVal: moment.Moment;
   timerIsStart = false;
@@ -29,19 +27,20 @@ export class CounterComponent implements OnInit {
       startWith({ pause: true, timerVal: 0 }),
       scan((acc, val) => ({ ...acc, ...val })),
       tap(state => {
-        const duration = moment.duration(state.timerVal, 'seconds');
-        const time = moment.utc(duration.asMilliseconds()).format('HH:mm:ss');
-        this.timer.nativeElement.innerText = time;
+        this.convertFormat(state.timerVal)
       }),
       switchMap(state => state.pause ? NEVER : interval(1000).pipe(
         tap(val => {
           state.timerVal += 1;
-          const duration = moment.duration(state.timerVal, 'seconds');
-          const time = moment.utc(duration.asMilliseconds()).format('HH:mm:ss');
-          this.timer.nativeElement.innerText = time;
+          this.convertFormat(state.timerVal)
         })
       ))
     ).subscribe();
+  }
+  private convertFormat(interval) {
+    const duration = moment.duration(interval, 'seconds');
+    const time = moment.utc(duration.asMilliseconds()).format('HH:mm:ss');
+    this.timer = time;
   }
   startTimer(): void {
     this.timerIsStart = true;
