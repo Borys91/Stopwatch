@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { fromEvent, interval, NEVER, Subject, } from 'rxjs';
 import { buffer, debounceTime, filter, scan, startWith, switchMap, tap,   } from 'rxjs/internal/operators'
 
@@ -9,11 +9,10 @@ import * as moment from 'moment';
   templateUrl: './counter.component.html',
   styleUrls: ['./counter.component.scss']
 })
-export class CounterComponent implements OnInit {
+export class CounterComponent implements OnInit , AfterViewInit {
   @ViewChild('pause', { read: ElementRef, static: true }) pause: ElementRef;
   timer;
   title = 'stopwatch';
-  timerVal: moment.Moment;
   timerIsStart = false;
   counter: Subject<{ pause?: boolean, timerVal?: number }> = new Subject();
 
@@ -21,6 +20,9 @@ export class CounterComponent implements OnInit {
 
   ngOnInit(): void {
     this.initialTimer();
+  }
+  ngAfterViewInit():void {
+    this.pauseTimer()
   }
   private initialTimer() {
     this.counter.pipe(
